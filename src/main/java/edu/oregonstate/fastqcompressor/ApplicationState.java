@@ -5,87 +5,53 @@ package edu.oregonstate.fastqcompressor;
  */
 public class ApplicationState {
 
-    private String inputFile;
-    private String outputFile;
-    private boolean gzipEnabled;
-    private Operation operation;
+    private static String inputFile;
+    private static String outputFile;
+    private static boolean gzipEnabled;
+    private static Operation operation;
 
     private ApplicationState() {}
 
-    public String getInputFile() {
+    public static String getInputFile() {
         return inputFile;
     }
 
-    public String getOutputFile() {
+    public static String getOutputFile() {
         return outputFile;
     }
 
-    public boolean isGzipEnabled() {
+    public static boolean isGzipEnabled() {
         return gzipEnabled;
     }
 
-    public Operation getOperation() {
+    public static Operation getOperation() {
         return operation;
     }
 
-    public static ApplicationState build(String[] args) {
-        final ApplicationState applicationState = new ApplicationState();
-
-        int i = 0;
-        for(; i < args.length; i++) {
-            if(args[i].startsWith("-")) {
-                handleOptions(applicationState, args[i]);
-            } else break;
-        }
-
-        if(applicationState.operation == null) {
-            throw new RuntimeException("no operation specified.");
-        } else if(i >= args.length) {
-            throw new RuntimeException("no input file specified.");
-        }
-
-        applicationState.inputFile = args[i++];
-
-        if(i < args.length) {
-            applicationState.outputFile = args[i++];
-        } else {
-            if(applicationState.operation.equals(Operation.COMPRESS)) {
-                applicationState.outputFile = applicationState.inputFile + ".fuc";
-            } else if(applicationState.operation.equals(Operation.DECOMPRESS)) {
-                if(!applicationState.inputFile.endsWith(".fuc"))
-                    throw new RuntimeException("not sure what to name output file. expected .fuc file as input.");
-                applicationState.outputFile = applicationState.inputFile.substring(0, applicationState.inputFile.length() - 4);
-            }
-        }
-
-        if(i != args.length) {
-            throw new RuntimeException("too many arguments.");
-        }
-
-        return applicationState;
+    public static void setInputFile(String inputFile) {
+        ApplicationState.inputFile = inputFile;
     }
 
-    private static void handleOptions(final ApplicationState applicationState, String opts) {
-        if(opts.contains("g"))
-            applicationState.gzipEnabled = true;
-        opts = opts.replace("g", "");
+    public static void setOutputFile(String outputFile) {
+        ApplicationState.outputFile = outputFile;
+    }
 
-        if(opts.contains("c"))
-            if(applicationState.operation == null)
-                applicationState.operation = Operation.COMPRESS;
-            else
-                throw new RuntimeException("too many operations supplied.");
-        opts = opts.replace("c", "");
+    public static void setGzipEnabled(boolean gzipEnabled) {
+        ApplicationState.gzipEnabled = gzipEnabled;
+    }
 
-        if(opts.contains("d"))
-            if(applicationState.operation == null)
-                applicationState.operation = Operation.DECOMPRESS;
-            else
-                throw new RuntimeException("too many operations supplied.");
-        opts = opts.replace("d", "");
+    public static void setOperation(Operation operation) {
+        ApplicationState.operation = operation;
+    }
 
-        if(!opts.equals("-")) {
-            throw new RuntimeException("invalid options specified: " + opts);
+    public static void determineOutputFile() {
+        if(getOperation().equals(Operation.COMPRESS)) {
+            ApplicationState.setOutputFile(isGzipEnabled() ? getInputFile() + ".gfuc" : getInputFile() + ".fuc");
+        } else if(getOperation().equals(Operation.DECOMPRESS)) {
+            if(!getInputFile().endsWith(".fuc") && isGzipEnabled() || !getInputFile().endsWith(".gfuc") && isGzipEnabled())
+                throw new RuntimeException("not sure what to name output file. expected "
+                        + (isGzipEnabled() ? "gfuc" : "fuc") + " file as input.");
+            setOutputFile(getInputFile().substring(0, getInputFile().length() - (isGzipEnabled() ? 5 : 4)));
         }
     }
 
