@@ -18,17 +18,17 @@ import java.util.zip.GZIPOutputStream;
  */
 public class OperationExecutor {
 
-    public static void run() throws Exception {
+    public static double run() throws Exception {
         if(ApplicationState.Operation.COMPRESS.equals(ApplicationState.getOperation())) {
-            compress();
+            return compress();
         } else if(ApplicationState.Operation.DECOMPRESS.equals(ApplicationState.getOperation())) {
-            decompress();
+            return decompress();
         } else {
-            System.out.println("no operation specified. please either supply -c (compress) or -d (decompress).");
+            throw new RuntimeException("no operation specified. please either supply -c (compress) or -d (decompress).");
         }
     }
 
-    private static void compress() throws IOException, InterruptedException {
+    private static double compress() throws IOException, InterruptedException {
         final File file = new File(ApplicationState.getInputFile());
         final BufferedReader input = new BufferedReader(new FileReader(file));
 
@@ -69,11 +69,12 @@ public class OperationExecutor {
         waitForDeath(compressors);
 
         final long endTime = System.currentTimeMillis();
-        System.out.println("r/w took " + (endTime - startTime) + " ms. throughput of "
-                + (file.length() / (endTime - startTime) * 1000.0D) / (1024 * 1024) + " MB/s.");
+        final double throughput = (file.length() / (endTime - startTime) * 1000.0D) / (1024 * 1024);
+        System.out.println("r/w took " + (endTime - startTime) + " ms. throughput of " + throughput + " MB/s.");
+        return throughput;
     }
 
-    private static void decompress() throws IOException, InterruptedException {
+    private static double decompress() throws IOException, InterruptedException {
         final BufferedWriter output = new BufferedWriter(new FileWriter(new File(ApplicationState.getOutputFile())));
 
         final Decompressor[] decompressors = new Decompressor[] {
@@ -114,10 +115,12 @@ public class OperationExecutor {
         }
 
         final long endTime = System.currentTimeMillis();
-        System.out.println("r/w took " + (endTime - startTime) + " ms. throughput of "
-                + (new File(ApplicationState.getOutputFile()).length() / (endTime - startTime) * 1000.0D) / (1024 * 1024) + " MB/s.");
+        final double throughput = (new File(ApplicationState.getOutputFile()).length() / (endTime - startTime) * 1000.0D) / (1024 * 1024);
+        System.out.println("r/w took " + (endTime - startTime) + " ms. throughput of " + throughput + " MB/s.");
 
         output.close();
+
+        return throughput;
     }
 
     private static BufferedReader openReader(final String file) throws IOException {

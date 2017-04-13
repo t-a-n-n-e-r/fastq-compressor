@@ -125,11 +125,10 @@ public class GUI extends JFrame {
             buttonExecute.setEnabled(false);
 
             try {
-                OperationExecutor.run();
+                labelStatus.setText("Status: Done @ " + ((int) (OperationExecutor.run() * 1000)) / 1000 + " MB/s.");
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
-            labelStatus.setText("Status: Done");
         });
 
         checkboxGzip.addActionListener(e -> {
