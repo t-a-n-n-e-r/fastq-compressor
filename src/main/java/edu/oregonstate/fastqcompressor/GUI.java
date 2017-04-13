@@ -92,26 +92,27 @@ public class GUI extends JFrame {
                     ApplicationState.setOperation(ApplicationState.Operation.COMPRESS);
                     labelOperation.setText("Operation: Compress");
 
+                    checkboxGzip.setEnabled(true);
+                    checkboxGzip.setSelected(false);
+                    ApplicationState.setGzipEnabled(false);
+
                     ApplicationState.setInputFile(chooser.getSelectedFile().getAbsolutePath());
                 } else {
                     ApplicationState.setOperation(ApplicationState.Operation.DECOMPRESS);
                     labelOperation.setText("Operation: Decompress");
 
                     ApplicationState.setInputFile(fixInputFile(chooser.getSelectedFile().getAbsolutePath()));
+                    System.out.println(ApplicationState.getInputFile());
+
+                    checkboxGzip.setEnabled(false);
+                    checkboxGzip.setSelected(ApplicationState.getInputFile().endsWith(".gfuc"));
+                    ApplicationState.setGzipEnabled(ApplicationState.getInputFile().endsWith(".gfuc"));
                 }
 
                 labelInput.setText("Input: " + new File(ApplicationState.getInputFile()).getName());
 
                 ApplicationState.determineOutputFile();
                 labelOutput.setText("Output: " + new File(ApplicationState.getOutputFile()).getName());
-
-                if(ApplicationState.getOperation().equals(ApplicationState.Operation.COMPRESS)) {
-                    checkboxGzip.setEnabled(true);
-                    checkboxGzip.setSelected(false);
-                } else {
-                    checkboxGzip.setEnabled(false);
-                    checkboxGzip.setSelected(ApplicationState.getInputFile().endsWith(".gfuc"));
-                }
 
                 labelStatus.setText("Status: Ready");
 
@@ -129,6 +130,13 @@ public class GUI extends JFrame {
                 e1.printStackTrace();
             }
             labelStatus.setText("Status: Done");
+        });
+
+        checkboxGzip.addActionListener(e -> {
+            ApplicationState.setGzipEnabled(checkboxGzip.isSelected());
+
+            ApplicationState.determineOutputFile();
+            labelOutput.setText("Output: " + new File(ApplicationState.getOutputFile()).getName());
         });
     }
 

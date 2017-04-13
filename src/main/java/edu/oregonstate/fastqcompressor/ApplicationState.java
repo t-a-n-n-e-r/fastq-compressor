@@ -48,7 +48,7 @@ public class ApplicationState {
         if(getOperation().equals(Operation.COMPRESS)) {
             ApplicationState.setOutputFile(isGzipEnabled() ? getInputFile() + ".gfuc" : getInputFile() + ".fuc");
         } else if(getOperation().equals(Operation.DECOMPRESS)) {
-            if(!getInputFile().endsWith(".fuc") && isGzipEnabled() || !getInputFile().endsWith(".gfuc") && isGzipEnabled())
+            if(!getInputFile().endsWith(".fuc") && !isGzipEnabled() || !getInputFile().endsWith(".gfuc") && isGzipEnabled())
                 throw new RuntimeException("not sure what to name output file. expected "
                         + (isGzipEnabled() ? "gfuc" : "fuc") + " file as input.");
             setOutputFile(getInputFile().substring(0, getInputFile().length() - (isGzipEnabled() ? 5 : 4)));
