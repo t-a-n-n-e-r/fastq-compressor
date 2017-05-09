@@ -1,6 +1,10 @@
 package edu.oregonstate.fastqcompressor.decompress;
 
+import edu.oregonstate.fastqcompressor.util.Files;
+
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -9,13 +13,32 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public abstract class Decompressor extends Thread {
 
     private final ConcurrentLinkedQueue<String> linkedQueue = new ConcurrentLinkedQueue<>();
-    private final BufferedReader reader;
+    private final String file;
 
-    public Decompressor(final BufferedReader reader) {
-        this.reader = reader;
+    private BufferedReader reader;
+    private InputStream inputStream;
+
+    public Decompressor(final String file) {
+        this.file = file;
+    }
+
+    protected InputStream getInputStream() {
+        try {
+            if(inputStream == null)
+                inputStream = Files.openInputStream(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return inputStream;
     }
 
     protected BufferedReader getReader() {
+        try {
+            if(reader == null)
+                reader = Files.openReader(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return reader;
     }
 

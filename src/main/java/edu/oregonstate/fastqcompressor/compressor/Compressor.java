@@ -1,7 +1,10 @@
 package edu.oregonstate.fastqcompressor.compressor;
 
+import edu.oregonstate.fastqcompressor.util.Files;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -12,18 +15,43 @@ public abstract class Compressor extends Thread {
     private boolean running = true;
 
     private final ConcurrentLinkedQueue<String> linkedQueue = new ConcurrentLinkedQueue<>();
-    private final BufferedWriter writer;
+    private final String file;
 
-    public Compressor(final BufferedWriter writer) {
-        this.writer = writer;
+    private BufferedWriter writer;
+    private OutputStream outputStream;
+
+    public Compressor(final String file) {
+        this.file = file;
     }
 
     public int getBacklogSize() {
         return linkedQueue.size();
     }
 
+    protected OutputStream getOutputStream() {
+        if(outputStream == null) {
+            try {
+                outputStream = Files.openOutputStream(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return outputStream;
+    }
+
     protected BufferedWriter getWriter() {
+        if(writer == null) {
+            try {
+                writer = Files.openWriter(getOutputFilePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return writer;
+    }
+
+    protected String getOutputFilePath() {
+        return file;
     }
 
     public void pass(String ln) {
@@ -39,7 +67,10 @@ public abstract class Compressor extends Thread {
             }
             if(!running) {
                 try {
-                    writer.close();
+                    if(writer != null)
+                        writer.close();
+                    else if(outputStream != null)
+                        outputStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

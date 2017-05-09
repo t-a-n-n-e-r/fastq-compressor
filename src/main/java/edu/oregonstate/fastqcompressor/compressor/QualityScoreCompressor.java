@@ -1,6 +1,5 @@
 package edu.oregonstate.fastqcompressor.compressor;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 
 /**
@@ -8,8 +7,8 @@ import java.io.IOException;
  */
 public class QualityScoreCompressor extends Compressor {
 
-    public QualityScoreCompressor(BufferedWriter writer) {
-        super(writer);
+    public QualityScoreCompressor(String file) {
+        super(file);
     }
 
     @Override

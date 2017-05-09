@@ -68,6 +68,10 @@ public class Application {
                 throw new RuntimeException("too many operations supplied.");
         opts = opts.replace("d", "");
 
+        if(opts.contains("s"))
+            ApplicationState.setSoftwareEnabled(true);
+        opts = opts.replace("s", "");
+
         if(!opts.equals("-")) {
             throw new RuntimeException("invalid options specified: " + opts);
         }

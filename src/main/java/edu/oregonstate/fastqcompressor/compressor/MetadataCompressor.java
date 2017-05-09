@@ -1,6 +1,5 @@
 package edu.oregonstate.fastqcompressor.compressor;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +12,8 @@ public class MetadataCompressor extends Compressor {
     private String lastLine;
     private Map<Integer, String> splitVals = new HashMap<>();
 
-    public MetadataCompressor(BufferedWriter writer) {
-        super(writer);
+    public MetadataCompressor(String file) {
+        super(file);
     }
 
     @Override

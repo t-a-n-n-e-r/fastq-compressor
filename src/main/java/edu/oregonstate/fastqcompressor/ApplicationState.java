@@ -8,6 +8,7 @@ public class ApplicationState {
     private static String inputFile;
     private static String outputFile;
     private static boolean gzipEnabled;
+    private static boolean softwareEnabled;
     private static Operation operation;
 
     private ApplicationState() {}
@@ -24,6 +25,10 @@ public class ApplicationState {
         return gzipEnabled;
     }
 
+    public static boolean isSoftwareEnabled() {
+        return softwareEnabled;
+    }
+
     public static Operation getOperation() {
         return operation;
     }
@@ -38,6 +43,10 @@ public class ApplicationState {
 
     public static void setGzipEnabled(boolean gzipEnabled) {
         ApplicationState.gzipEnabled = gzipEnabled;
+    }
+
+    public static void setSoftwareEnabled(boolean softwareEnabled) {
+        ApplicationState.softwareEnabled = softwareEnabled;
     }
 
     public static void setOperation(Operation operation) {

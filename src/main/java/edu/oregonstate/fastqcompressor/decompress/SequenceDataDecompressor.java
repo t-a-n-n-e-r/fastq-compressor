@@ -1,6 +1,5 @@
 package edu.oregonstate.fastqcompressor.decompress;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
 /**
@@ -8,16 +7,16 @@ import java.io.IOException;
  */
 public class SequenceDataDecompressor extends Decompressor {
 
-    public SequenceDataDecompressor(BufferedReader reader) {
-        super(reader);
+    public SequenceDataDecompressor(String file) {
+        super(file);
     }
 
     @Override
     protected boolean handle() {
-        final char[] buff = new char[25];
-        final char[] reconstructed = new char[100];
+        final byte[] buff = new byte[25];
+        final byte[] reconstructed = new byte[100];
         try {
-            int read = getReader().read(buff);
+            int read = getInputStream().read(buff);
             if(read != 25)
                 return false;
 

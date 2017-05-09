@@ -19,6 +19,7 @@ public class GUI extends JFrame {
     private JButton buttonSelectInput;
     private JButton buttonExecute;
     private JCheckBox checkboxGzip;
+    private JCheckBox checkboxSoftware;
 
     public GUI() {
         setContentPane(buildContentPanel());
@@ -77,6 +78,9 @@ public class GUI extends JFrame {
         checkboxGzip = new JCheckBox("gzip");
         panel.add(checkboxGzip);
 
+        checkboxSoftware = new JCheckBox("software only");
+        panel.add(checkboxSoftware);
+
         return panel;
     }
 
@@ -125,7 +129,7 @@ public class GUI extends JFrame {
             buttonExecute.setEnabled(false);
 
             try {
-                labelStatus.setText("Status: Done @ " + ((int) (OperationExecutor.run() * 1000)) / 1000 + " MB/s.");
+                labelStatus.setText("Status: Done @ " + ((int) (OperationExecutor.run() * 100)) / (double) 100 + " MB/s.");
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -136,6 +140,10 @@ public class GUI extends JFrame {
 
             ApplicationState.determineOutputFile();
             labelOutput.setText("Output: " + new File(ApplicationState.getOutputFile()).getName());
+        });
+
+        checkboxSoftware.addActionListener(e -> {
+            ApplicationState.setSoftwareEnabled(checkboxSoftware.isSelected());
         });
     }
 

@@ -1,6 +1,5 @@
 package edu.oregonstate.fastqcompressor.decompress;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
 /**
@@ -8,8 +7,8 @@ import java.io.IOException;
  */
 public class QualityScoreDecompressor extends Decompressor {
 
-    public QualityScoreDecompressor(BufferedReader reader) {
-        super(reader);
+    public QualityScoreDecompressor(String file) {
+        super(file);
     }
 
     @Override

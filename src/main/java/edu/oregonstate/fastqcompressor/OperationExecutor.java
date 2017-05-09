@@ -10,8 +10,6 @@ import edu.oregonstate.fastqcompressor.decompress.QualityScoreDecompressor;
 import edu.oregonstate.fastqcompressor.decompress.SequenceDataDecompressor;
 
 import java.io.*;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * Created by tanner on 4/12/17.
@@ -33,10 +31,10 @@ public class OperationExecutor {
         final BufferedReader input = new BufferedReader(new FileReader(file));
 
         final Compressor[] compressors = new Compressor[] {
-                new MetadataCompressor(openWriter(ApplicationState.getOutputFile() + "1")),
-                new SequenceDataCompressor(openWriter(ApplicationState.getOutputFile() + "2")),
-                new MetadataCompressor(openWriter(ApplicationState.getOutputFile() + "3")),
-                new QualityScoreCompressor(openWriter(ApplicationState.getOutputFile() + "4")),
+                new MetadataCompressor(ApplicationState.getOutputFile() + "1"),
+                new SequenceDataCompressor(ApplicationState.getOutputFile() + "2"),
+                new MetadataCompressor(ApplicationState.getOutputFile() + "3"),
+                new QualityScoreCompressor(ApplicationState.getOutputFile() + "4"),
         };
 
         for (final Compressor w : compressors) {
@@ -78,10 +76,10 @@ public class OperationExecutor {
         final BufferedWriter output = new BufferedWriter(new FileWriter(new File(ApplicationState.getOutputFile())));
 
         final Decompressor[] decompressors = new Decompressor[] {
-                new MetadataDecompressor(openReader(ApplicationState.getInputFile() + "1")),
-                new SequenceDataDecompressor(openReader(ApplicationState.getInputFile() + "2")),
-                new MetadataDecompressor(openReader(ApplicationState.getInputFile() + "3")),
-                new QualityScoreDecompressor(openReader(ApplicationState.getInputFile() + "4"))
+                new MetadataDecompressor(ApplicationState.getInputFile() + "1"),
+                new SequenceDataDecompressor(ApplicationState.getInputFile() + "2"),
+                new MetadataDecompressor(ApplicationState.getInputFile() + "3"),
+                new QualityScoreDecompressor(ApplicationState.getInputFile() + "4")
         };
 
         for(final Decompressor d : decompressors) {
@@ -121,18 +119,6 @@ public class OperationExecutor {
         output.close();
 
         return throughput;
-    }
-
-    private static BufferedReader openReader(final String file) throws IOException {
-        return ApplicationState.isGzipEnabled()
-                ? new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(file))))
-                : new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-    }
-
-    private static BufferedWriter openWriter(final String file) throws IOException {
-        return ApplicationState.isGzipEnabled()
-                ? new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(file))))
-                : new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
     }
 
     private static void waitForDeath(final Thread[] threads) throws InterruptedException {

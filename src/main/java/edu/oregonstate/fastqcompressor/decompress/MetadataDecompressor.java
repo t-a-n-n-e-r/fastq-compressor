@@ -1,6 +1,5 @@
 package edu.oregonstate.fastqcompressor.decompress;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +12,8 @@ public class MetadataDecompressor extends Decompressor {
     private String lastNonemptyLine;
     private Map<Integer, String> splitVals = new HashMap<>();
 
-    public MetadataDecompressor(BufferedReader reader) {
-        super(reader);
+    public MetadataDecompressor(String file) {
+        super(file);
     }
 
     @Override
