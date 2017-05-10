@@ -2,6 +2,7 @@ package edu.oregonstate.fastqcompressor.decompress;
 
 import edu.oregonstate.fastqcompressor.util.Files;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +26,7 @@ public abstract class Decompressor extends Thread {
     protected InputStream getInputStream() {
         try {
             if(inputStream == null)
-                inputStream = Files.openInputStream(file);
+                inputStream = new BufferedInputStream(Files.openInputStream(file));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -2,6 +2,7 @@ package edu.oregonstate.fastqcompressor.compressor;
 
 import edu.oregonstate.fastqcompressor.util.Files;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -31,7 +32,7 @@ public abstract class Compressor extends Thread {
     protected OutputStream getOutputStream() {
         if(outputStream == null) {
             try {
-                outputStream = Files.openOutputStream(file);
+                outputStream = new BufferedOutputStream(Files.openOutputStream(file));
             } catch (IOException e) {
                 e.printStackTrace();
             }
