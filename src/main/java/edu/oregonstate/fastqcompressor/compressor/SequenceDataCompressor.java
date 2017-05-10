@@ -27,7 +27,7 @@ public class SequenceDataCompressor extends Compressor {
     @Override
     public void handle(String ln) {
         try {
-           // if(ApplicationState.isSoftwareEnabled()) {
+            if(ApplicationState.isSoftwareEnabled()) {
                 for (int i = 0; i < ln.length(); i += 4) {
                     int b = (int) ln.charAt(i);
                     int b2 = (int) ln.charAt(i + 1);
@@ -38,9 +38,9 @@ public class SequenceDataCompressor extends Compressor {
 
                     getOutputStream().write((char) total);
                 }
-//            } else {
-//                tmpOutput.write(ln.getBytes());
-//            }
+            } else {
+                tmpOutput.write(ln.getBytes());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
