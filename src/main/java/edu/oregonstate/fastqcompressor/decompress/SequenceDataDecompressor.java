@@ -22,7 +22,7 @@ public class SequenceDataDecompressor extends Decompressor {
 
             for(int i = 0; i < 25; i++) {
                 for(int j = 0; j < 4; j++) {
-                    switch((buff[i] & (0b00000011 << j * 2)) >> j * 2) {
+                    switch((buff[i] & (0b00000011 << (3 - j) * 2)) >> (3 - j) * 2) {
                         case 0b00000000: reconstructed[i * 4 + j] = 'A'; break;
                         case 0b00000001: reconstructed[i * 4 + j] = 'C'; break;
                         case 0b00000010: reconstructed[i * 4 + j] = 'T'; break;

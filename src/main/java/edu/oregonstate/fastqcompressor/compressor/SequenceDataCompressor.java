@@ -34,7 +34,7 @@ public class SequenceDataCompressor extends Compressor {
                     int b3 = (int) ln.charAt(i + 2);
                     int b4 = (int) ln.charAt(i + 3);
 
-                    int total = (b & MASKS) >> 1 | (b2 & MASKS) << 1 | (b3 & MASKS) << 3 | (b4 & MASKS) << 5;
+                    int total = (b & MASKS) << 5 | (b2 & MASKS) << 3 | (b3 & MASKS) << 1 | (b4 & MASKS) >> 1;
 
                     getOutputStream().write((char) total);
                 }
